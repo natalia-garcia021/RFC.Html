@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de RFC con API REST</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #rfcOutput {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Generador de RFC con API REST</h2>
+    <form id="rfcForm">
+        <label for="nombre">Nombre(s):</label>
+        <input type="text" id="nombre" required>
+
+        <label for="apellidoPaterno">Apellido Paterno:</label>
+        <input type="text" id="apellidoPaterno" required>
+
+        <label for="apellidoMaterno">Apellido Materno:</label>
+        <input type="text" id="apellidoMaterno" required>
+
+        <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+        <input type="date" id="fechaNacimiento" required>
+
+        <button type="button" onclick="generarRFC()">Generar RFC</button>
+    </form>
+
+    <div id="rfcOutput"></div>
+
+    <script>
+        function generarRFC() {
+            var nombre = document.getElementById('nombre').value.toUpperCase();
+            var apellidoPaterno = document.getElementById('apellidoPaterno').value.toUpperCase();
+            var apellidoMaterno = document.getElementById('apellidoMaterno').value.toUpperCase();
+            var fechaNacimiento = document.getElementById('fechaNacimiento').value;
+
+            // Lógica para generar el RFC (simplificada)
+            // Puedes personalizar esta lógica según tus necesidades
+
+            var rfc = apellidoPaterno.slice(0, 2) + apellidoMaterno.charAt(0) + nombre.charAt(0) +
+                      fechaNacimiento.slice(2, 4) + fechaNacimiento.slice(5, 7) + fechaNacimiento.slice(8, 10);
+
+            // Consumir API REST para obtener datos adicionales (Random User Generator)
+            fetch('https://randomuser.me/api/')
+                .then(response => response.json())
+                .then(data => {
+                    var usuario = data.results[0];
+                    var genero = usuario.gender === 'famele' ? 'Hombre' : 'Mujer';
+
+                    // Mostrar el RFC y datos adicionales
+                    document.getElementById('rfcOutput').innerHTML = `RFC Generado: ${rfc}<br>
+                                                                      Nombre Completo: ${nombre} ${apellidoPaterno} ${apellidoMaterno}<br>
+                                                                      Género: ${genero}`;
+                })
+                .catch(error => console.error('Error al obtener datos de la API:', error));
+        }
+    </script>
+</body>
+</html>
